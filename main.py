@@ -337,6 +337,61 @@ def createMonthlyWeatherData():  # cancelled for env needs to be index.
     print("end?")
 
 
+def dropColumnsForTrainingTraitData():
+    # read csv
+    df = pd.read_csv(
+        os.path.join(
+            "Data",
+            "Training_Data",
+            "1_Training_Trait_Data_2014_2021_NoMissingYield.csv",
+        )
+    )
+
+    columns = [
+        "Env",
+        "Hybrid",
+        "Year",
+        "Yield_Mg_ha",
+    ]
+    df1 = pd.DataFrame(df, columns=columns)
+    # write the csv file
+    df1.to_csv(
+        os.path.join(
+            "Data",
+            "Training_Data",
+            "1_Training_Trait_Data_2014_2021_NoMissingYield_Selected_Columns.csv",
+        ),
+        index=False,
+    )
+
+def dropColumnsForTrainingMetaData():
+    
+
+def checkAndFillNaData(csvFileIn, csvFileOut):
+
+    # read csv 2 check info if it has na's fill them
+    df2 = pd.read_csv(csvFileIn)
+    df2.info()
+
+    isAnyValNan = df2.isnull().values.any()
+    # fill empty objects with both ways
+    print(isAnyValNan)
+
+    if isAnyValNan:
+        df2.fillna(method="ffill", inplace=True)
+        df2.fillna(method="bfill", inplace=True)
+        print("NA values found in the data and filled")
+    else:
+        print("No NA values found in the data")
+
+    df2.info()
+
+    df2.to_csv(
+        csvFileOut,
+        index=False,
+    )
+
+
 def main():
 
     # drop testing meta data columns
@@ -350,6 +405,24 @@ def main():
     # createMergeTestSubTemp_WeatherData()
 
     # createMonthlyWeatherData()
+
+    # drop columns for training trait data
+    # dropColumnsForTrainingTraitData()
+
+
+
+    # checkAndFillNaData(
+    #     os.path.join(
+    #         "Data",
+    #         "Training_Data",
+    #         "1_Training_Trait_Data_2014_2021_NoMissingYield_Selected_Columns.csv",
+    #     ),
+    #     os.path.join(
+    #         "Data",
+    #         "Training_Data",
+    #         "1_Training_Trait_Data_2014_2021_NoMissingYield_Selected_Columns_Filled.csv",
+    #     ),
+    # )
 
     print("Done")
 
