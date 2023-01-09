@@ -1,5 +1,6 @@
 import pandas as pd
 import os
+from sklearn.preprocessing import LabelEncoder
 
 # main declaration
 
@@ -50,21 +51,19 @@ def hybridToNumeric(x):
         return 2
 
 
+def labelEncodeData(givenCsvFile, newCsvFile, givenColumn):
+    # read the csv file
+    df = pd.read_csv(givenCsvFile, encoding="latin-1")
+    # label encode the data
+    label_encoder = LabelEncoder()
+    df[givenColumn] = label_encoder.fit_transform(df[givenColumn])
+    # write the csv file
+    df.to_csv(newCsvFile, index=False)
+
+
 def main():
 
-    import pandas as pd
-
-    checkPearsonCorrelation(
-        os.path.join(
-            "Data",
-            "Training_Data",
-            "6_Training_EC_Data_2014_2021.csv",
-        ),
-        os.path.join(
-            "Data", "Training_Data", "1_Training_Trait_Data_2014_2021_Pearson.csv"
-        ),
-    )
-
+    # read csv file traittada no missing yield
     df = pd.read_csv(
         os.path.join(
             "Data",
@@ -73,8 +72,6 @@ def main():
         ),
         encoding="latin-1",
     )
-
-    print(df.head())
 
     # create dummies
     # df = pd.get_dummies(df, columns=["Hybrid"], prefix = ["Dummy_Hybrid"], drop_first=True)
@@ -122,3 +119,23 @@ if __name__ == "__main__":
             "Data", "Training_Data", "1_Training_Trait_Data_2014_2021_Pearson.csv"
         ),
     ) """
+
+# label encoder
+
+"""# check type
+    print(df.dtypes)
+
+    # make Env variable numeric (can only be used on object type)
+    label_encoder = LabelEncoder()
+    df["Env"] = label_encoder.fit_transform(df["Env"])
+    print(df.dtypes)
+
+    # save to csv
+    df.to_csv(
+        os.path.join(
+            "Data",
+            "Training_Data",
+            "1_Training_Trait_Data_2014_2021_NoMissingYield_EnvNumeric.csv",
+        ),
+        index=False,
+    )"""
