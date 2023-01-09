@@ -311,7 +311,7 @@ def createMergeTestSubTemp_WeatherData():
 # Env,Hybrid,Yield_Mg_ha,Year_x,Treatment,Previous_Crop,Type_of_planter (fluted cone; belt cone; air planter),System_Determining_Moisture,Pounds_Needed_Soil_Moisture,Irrigated,Plot_Area_ha,Year_y,1:1 Soil pH,1:1 S Salts mmho/cm,Organic Matter LOI %,Potassium ppm K,Nitrate-N ppm N,Mehlich P-III ppm P,%Ca Sat,%Mg Sat,% Sand,% Silt,% Clay,Date,ALLSKY_SFC_PAR_TOT,RH2M,T2M_MAX,GWETPROF,GWETTOP,T2M_MIN,GWETROOT
 
 
-def createMonthlyWeatherData():
+def createMonthlyWeatherData():  # cancelled for env needs to be index.
     # read csv
     df = pd.read_csv(
         os.path.join(
@@ -349,7 +349,7 @@ def main():
     # createMergedTestSubTemp_SoilData()
     # createMergeTestSubTemp_WeatherData()
 
-    createMonthlyWeatherData()
+    # createMonthlyWeatherData()
 
     print("Done")
 
