@@ -365,7 +365,7 @@ def dropColumnsForTrainingTraitData():
     )
 
 def dropColumnsForTrainingMetaData():
-    
+    # this is where we left ##############################################################
 
 def checkAndFillNaData(csvFileIn, csvFileOut):
 
