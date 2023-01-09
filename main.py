@@ -24,6 +24,100 @@ def dropColumnAndWriteCsvFile(givenColumn, givenCsvFile, newCsvFile):
     df.to_csv(newCsvFile, index=False)
 
 
+def dropColumnsForTestingMetaData():
+    # read the csv file
+    df = pd.read_csv(
+        os.path.join("Data", "Testing_Data", "2_Testing_Meta_Data_2022.csv"),
+        encoding="latin-1",
+    )
+
+    # selected columns to stay env, year, Treatment, previous crop, type of planter, System_Determining_Moisture, Pounds_Needed_Soil_Moisture, Irrigated,  Plot_Area_ha
+    # drop rest of the columns
+    columns = [
+        "Env",
+        "Year",
+        "Treatment",
+        "Previous_Crop",
+        "Type_of_planter (fluted cone; belt cone; air planter)",
+        "System_Determining_Moisture",
+        "Pounds_Needed_Soil_Moisture",
+        "Irrigated",
+        "Plot_Area_ha",
+    ]
+    df1 = pd.DataFrame(df, columns=columns)
+    # write the csv file
+    df1.to_csv(
+        os.path.join(
+            "Data", "Testing_Data", "2_Testing_Meta_Data_Selected_ColumnsV1.csv"
+        ),
+        index=False,
+    )
+
+
+def dropColumnsForTestingSoilData():
+    # selected columns
+    # env, year, 1:1 Soil pH, 1:1 S Salts mmho/cm, Organic Matter LOI %, Potassium ppm K, Nitrate-N ppm N,Mehlich P-III ppm P,%Ca Sat,%Mg Sat, %Sand, %Silt, %clay
+    # read the csv file
+    df = pd.read_csv(
+        os.path.join("Data", "Testing_Data", "3_Testing_Soil_Data_2022.csv"),
+        encoding="latin-1",
+    )
+    # drop rest of the columns
+    columns = [
+        "Env",
+        "Year",
+        "1:1 Soil pH",
+        "1:1 S Salts mmho/cm",
+        "Organic Matter LOI %",
+        "Potassium ppm K",
+        "Nitrate-N ppm N",
+        "Mehlich P-III ppm P",
+        "%Ca Sat",
+        "%Mg Sat",
+        "% Sand",
+        "% Silt",
+        "% Clay",
+    ]
+    df1 = pd.DataFrame(df, columns=columns)
+    # write the csv file
+    df1.to_csv(
+        os.path.join(
+            "Data", "Testing_Data", "3_Testing_Soil_Data_Selected_ColumnsV1.csv"
+        ),
+        index=False,
+    )
+
+
+def dropColumnsForWeatherData():
+    # selected columns env, date, ALLSKY_SFC_PAR_TOT, RH2M, T2M_MAX, GWETPROF, GWETTOP, T2M_MIN, GWETROOT,
+    # read the csv file
+    df = pd.read_csv(
+        os.path.join("Data", "Testing_Data", "4_Testing_Weather_Data_2022.csv"),
+        encoding="latin-1",
+    )
+    # drop rest of the columns
+    columns = [
+        "Env",
+        "Date",
+        "ALLSKY_SFC_PAR_TOT",
+        "RH2M",
+        "T2M_MAX",
+        "GWETPROF",
+        "GWETTOP",
+        "T2M_MIN",
+        "GWETROOT",
+    ]
+
+    df1 = pd.DataFrame(df, columns=columns)
+    # write the csv file
+    df1.to_csv(
+        os.path.join(
+            "Data", "Testing_Data", "4_Testing_Weather_Data_SelectedColumnsV1"
+        ),
+        index=False,
+    )
+
+
 # check pearson correlation for a given csv file
 def checkPearsonCorrelation(givenCsvFile, newCsvFile):
     # read the csv file
@@ -44,13 +138,6 @@ def numeralizeData(givenCsvFile, newCsvFile):
     df.to_csv(newCsvFile, index=False)
 
 
-def hybridToNumeric(x):
-    if x == "1319YHR":
-        return 1
-    if x == "b":
-        return 2
-
-
 def labelEncodeData(givenCsvFile, newCsvFile, givenColumn):
     # read the csv file
     df = pd.read_csv(givenCsvFile, encoding="latin-1")
@@ -61,20 +148,208 @@ def labelEncodeData(givenCsvFile, newCsvFile, givenColumn):
     df.to_csv(newCsvFile, index=False)
 
 
-def main():
+def labelEncodeDataForAllObjects(givenCsvFile, newCsvFile):
+    # read the csv file
+    df = pd.read_csv(givenCsvFile, encoding="latin-1")
+    # label encode the data
+    label_encoder = LabelEncoder()
+    for column in df.columns:
+        if df[column].dtype == object:
+            df[column] = label_encoder.fit_transform(df[column])
+    # write the csv file
+    df.to_csv(newCsvFile, index=False)
 
-    # read csv file traittada no missing yield
+
+def createMergedTestSubTemp_MetaData():
+
+    # read csv 1 check info if it has na's fill them
+    df = pd.read_csv(
+        os.path.join("Data", "Testing_Data", "1_Submission_Template_2022.csv")
+    )
+    df.info()
+
+    # read csv 2 check info if it has na's fill them
+    df2 = pd.read_csv(
+        os.path.join(
+            "Data", "Testing_Data", "2_Testing_Meta_Data_Selected_ColumnsV1.csv"
+        )
+    )
+    df2.info()
+
+    # fill empty objects with both ways
+    df2.fillna(method="ffill", inplace=True)
+    df2.fillna(method="bfill", inplace=True)
+
+    df2.info()
+
+    df2.to_csv(
+        os.path.join(
+            "Data", "Testing_Data", "2_Testing_Meta_Data_Selected_ColumnsV1_Filled.csv"
+        ),
+        index=False,
+    )
+
+    mergeTwoCsvFiles(
+        os.path.join("Data", "Testing_Data", "1_Submission_Template_2022.csv"),
+        os.path.join(
+            "Data", "Testing_Data", "2_Testing_Meta_Data_Selected_ColumnsV1_Filled.csv"
+        ),
+        os.path.join("Data", "Testing_Data", "mergedTestSubTemp_MetaData.csv"),
+        "Env",
+    )
+
+    df3 = pd.read_csv(
+        os.path.join("Data", "Testing_Data", "mergedTestSubTemp_MetaData.csv")
+    )
+
+    df3.info()
+
+
+def createMergedTestSubTemp_SoilData():
+
+    # read csv 1 check info if it has na's fill them
+    df = pd.read_csv(
+        os.path.join("Data", "Testing_Data", "mergedTestSubTemp_MetaData.csv")
+    )
+    df.info()
+
+    # read csv 2 check info if it has na's fill them
+    df2 = pd.read_csv(
+        os.path.join(
+            "Data", "Testing_Data", "3_Testing_Soil_Data_Selected_ColumnsV1.csv"
+        )
+    )
+    df2.info()
+
+    # fill empty objects with both ways
+    df2.fillna(method="ffill", inplace=True)
+    df2.fillna(method="bfill", inplace=True)
+
+    df2.info()
+
+    df2.to_csv(
+        os.path.join(
+            "Data", "Testing_Data", "3_Testing_Soil_Data_Selected_ColumnsV1_Filled.csv"
+        ),
+        index=False,
+    )
+
+    mergeTwoCsvFiles(
+        os.path.join("Data", "Testing_Data", "mergedTestSubTemp_MetaData.csv"),
+        os.path.join(
+            "Data", "Testing_Data", "3_Testing_Soil_Data_Selected_ColumnsV1_Filled.csv"
+        ),
+        os.path.join("Data", "Testing_Data", "mergedTestSubTemp_Metadata_SoilData.csv"),
+        "Env",
+    )
+
+    df3 = pd.read_csv(
+        os.path.join("Data", "Testing_Data", "mergedTestSubTemp_Metadata_SoilData.csv")
+    )
+
+    df3.info()
+
+
+def createMergeTestSubTemp_WeatherData():
+
+    # read csv 1 check info if it has na's fill them
+    df = pd.read_csv(
+        os.path.join("Data", "Testing_Data", "mergedTestSubTemp_Metadata_SoilData.csv")
+    )
+    df.info()
+
+    # read csv 2 check info if it has na's fill them
+    df2 = pd.read_csv(
+        os.path.join(
+            "Data", "Testing_Data", "4_Testing_Weather_Data_SelectedColumnsV1.csv"
+        )
+    )
+    df2.info()
+
+    # fill empty objects with both ways
+    df2.fillna(method="ffill", inplace=True)
+    df2.fillna(method="bfill", inplace=True)
+
+    df2.info()
+
+    df2.to_csv(
+        os.path.join(
+            "Data",
+            "Testing_Data",
+            "4_Testing_Weather_Data_Selected_ColumnsV1_Filled.csv",
+        ),
+        index=False,
+    )
+
+    mergeTwoCsvFiles(
+        os.path.join("Data", "Testing_Data", "mergedTestSubTemp_Metadata_SoilData.csv"),
+        os.path.join(
+            "Data",
+            "Testing_Data",
+            "4_Testing_Weather_Data_Selected_ColumnsV1_Filled.csv",
+        ),
+        os.path.join(
+            "Data",
+            "Testing_Data",
+            "mergedTestSubTemp_Metadata_SoilData_WeatherData.csv",
+        ),
+        "Env",
+    )
+
+    df3 = pd.read_csv(
+        os.path.join(
+            "Data",
+            "Testing_Data",
+            "mergedTestSubTemp_Metadata_SoilData_WeatherData.csv",
+        )
+    )
+
+    df3.info()
+
+
+# all needed data columns for Training
+# Env,Hybrid,Yield_Mg_ha,Year_x,Treatment,Previous_Crop,Type_of_planter (fluted cone; belt cone; air planter),System_Determining_Moisture,Pounds_Needed_Soil_Moisture,Irrigated,Plot_Area_ha,Year_y,1:1 Soil pH,1:1 S Salts mmho/cm,Organic Matter LOI %,Potassium ppm K,Nitrate-N ppm N,Mehlich P-III ppm P,%Ca Sat,%Mg Sat,% Sand,% Silt,% Clay,Date,ALLSKY_SFC_PAR_TOT,RH2M,T2M_MAX,GWETPROF,GWETTOP,T2M_MIN,GWETROOT
+
+
+def createMonthlyWeatherData():
+    # read csv
     df = pd.read_csv(
         os.path.join(
             "Data",
-            "Training_Data",
-            "1_Training_Trait_Data_2014_2021_NoMissingYield.csv",
-        ),
-        encoding="latin-1",
+            "Testing_Data",
+            "4_Testing_Weather_Data_Selected_ColumnsV1_Filled_Temp.csv",
+        )
     )
+    df.info()
 
-    # create dummies
-    # df = pd.get_dummies(df, columns=["Hybrid"], prefix = ["Dummy_Hybrid"], drop_first=True)
+    print(df.head())
+    print(df.tail())
+
+    # convert date to datetime
+    df.Date = pd.to_datetime(df.Date)
+    df1 = df.resample("M", on="Date").mean()
+
+    print(df1.head())
+    print(df1.tail())
+
+    df1.info()
+
+    print("end?")
+
+
+def main():
+
+    # drop testing meta data columns
+
+    # dropColumnsForTestingMetaData()
+    # dropColumnsForTestingSoilData()
+    # dropColumnsForWeatherData()
+
+    # merge meta and template
+    # createMergedTestSubTemp_SoilData()
+    # createMergeTestSubTemp_WeatherData()
+
+    createMonthlyWeatherData()
 
     print("Done")
 
@@ -139,3 +414,20 @@ if __name__ == "__main__":
         ),
         index=False,
     )"""
+
+# test numeralize data
+""" labelEncodeDataForAllObjects(
+        os.path.join(
+            "Data",
+            "Training_Data",
+            "1_Training_Trait_Data_2014_2021_NoMissingYield.csv",
+        ),
+        os.path.join(
+            "Data",
+            "Training_Data",
+            "1_Training_Trait_Data_2014_2021_NoMissingYieldNumarized.csv",
+        ),
+    )
+"""
+# # interpolate missing values
+# df1.interpolate(method="linear", inplace=True)
