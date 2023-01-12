@@ -364,8 +364,81 @@ def dropColumnsForTrainingTraitData():
         index=False,
     )
 
+
 def dropColumnsForTrainingMetaData():
-    # this is where we left ##############################################################
+    # Env,Hybrid,Yield_Mg_ha,Year_x,Treatment,Previous_Crop,Type_of_planter (fluted cone; belt cone; air planter),System_Determining_Moisture,Pounds_Needed_Soil_Moisture,Irrigated,Plot_Area_ha,Year_y,1:1 Soil pH,1:1 S Salts mmho/cm,Organic Matter LOI %,Potassium ppm K,Nitrate-N ppm N,Mehlich P-III ppm P,%Ca Sat,%Mg Sat,% Sand,% Silt,% Clay,Date,ALLSKY_SFC_PAR_TOT,RH2M,T2M_MAX,GWETPROF,GWETTOP,T2M_MIN,GWETROOT
+
+    # irrigated bilgisi training metada yok , treatment içine gömülmüş.
+    # read csv
+    df = pd.read_csv(
+        os.path.join(
+            "Data",
+            "Training_Data",
+            "2_Training_Meta_Data_2014_2021.csv",
+        ),
+        encoding="latin-1",
+    )
+
+    columns = [
+        "Env",
+        "Year",
+        "Treatment",
+        "Previous_Crop",
+        "Type_of_planter (fluted cone; belt cone; air planter)",
+        "System_Determining_Moisture",
+        "Pounds_Needed_Soil_Moisture",
+    ]
+    df1 = pd.DataFrame(df, columns=columns)
+    # write the csv file
+    df1.to_csv(
+        os.path.join(
+            "Data",
+            "Training_Data",
+            "2_Training_Meta_Data_2014_2021_Selected_Columns.csv",
+        ),
+        index=False,
+    )
+
+
+def dropColumnsForTrainingSoilData():
+    # Env,Hybrid,Yield_Mg_ha,Year_x,Treatment,Previous_Crop,Type_of_planter (fluted cone; belt cone; air planter),System_Determining_Moisture,Pounds_Needed_Soil_Moisture,Irrigated,Plot_Area_ha,Year_y,1:1 Soil pH,1:1 S Salts mmho/cm,Organic Matter LOI %,Potassium ppm K,Nitrate-N ppm N,Mehlich P-III ppm P,%Ca Sat,%Mg Sat,% Sand,% Silt,% Clay,Date,ALLSKY_SFC_PAR_TOT,RH2M,T2M_MAX,GWETPROF,GWETTOP,T2M_MIN,GWETROOT
+    # read csv latin-1
+    df = pd.read_csv(
+        os.path.join(
+            "Data",
+            "Training_Data",
+            "3_Training_Soil_Data_2015_2021.csv",
+        ),
+        encoding="latin-1",
+    )
+
+    columns = [
+        "Env",
+        "Year",
+        "1:1 Soil pH",
+        "1:1 S Salts mmho/cm",
+        "Organic Matter LOI %",
+        "Potassium ppm K",
+        "Nitrate-N ppm N",
+        "Mehlich P-III ppm P",
+        "%Ca Sat",
+        "%Mg Sat",
+        "% Sand",
+        "% Silt",
+        "% Clay",
+    ]
+
+    df1 = pd.DataFrame(df, columns=columns)
+    # write the csv file
+    df1.to_csv(
+        os.path.join(
+            "Data",
+            "Training_Data",
+            "3_Training_Soil_Data_2015_2021_Selected_Columns.csv",
+        ),
+        index=False,
+    )
+
 
 def checkAndFillNaData(csvFileIn, csvFileOut):
 
@@ -391,6 +464,8 @@ def checkAndFillNaData(csvFileIn, csvFileOut):
         index=False,
     )
 
+def dropColumnsForTrainingWeatherData():
+    # this is wher we left off...
 
 def main():
 
@@ -409,8 +484,6 @@ def main():
     # drop columns for training trait data
     # dropColumnsForTrainingTraitData()
 
-
-
     # checkAndFillNaData(
     #     os.path.join(
     #         "Data",
@@ -423,6 +496,38 @@ def main():
     #         "1_Training_Trait_Data_2014_2021_NoMissingYield_Selected_Columns_Filled.csv",
     #     ),
     # )
+
+    # dropColumnsForTrainingMetaData()
+
+    """checkAndFillNaData(
+        os.path.join(
+            "Data",
+            "Training_Data",
+            "2_Training_Meta_Data_2014_2021_Selected_Columns.csv",
+        ),
+        os.path.join(
+            "Data",
+            "Training_Data",
+            "2_Training_Meta_Data_2014_2021_Selected_Columns_Filled.csv",
+        ),
+    )"""
+
+    # dropColumnsForTrainingSoilData()
+
+    # checkAndFillNaData(
+    #     os.path.join(
+    #         "Data",
+    #         "Training_Data",
+    #         "3_Training_Soil_Data_2015_2021_Selected_Columns.csv",
+    #     ),
+    #     os.path.join(
+    #         "Data",
+    #         "Training_Data",
+    #         "3_Training_Soil_Data_2015_2021_Selected_Columns_Filled.csv",
+    #     ),
+    # )
+
+
 
     print("Done")
 
