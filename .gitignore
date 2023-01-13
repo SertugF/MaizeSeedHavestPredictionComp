@@ -1,3 +1,6 @@
 Testing_Data
 Training_Data
 Data
+model.h5
+train_results.csv
+val_results.csv

@@ -352,6 +352,7 @@ def dropColumnsForTrainingTraitData():
         "Hybrid",
         "Year",
         "Yield_Mg_ha",
+        "Plot_Area_ha",  # added new, must have forget to add it
     ]
     df1 = pd.DataFrame(df, columns=columns)
     # write the csv file
@@ -576,7 +577,7 @@ def mergeAllTrainingData():
 
     # write to csv neeeds to be around 4.9gb ()
     df6.to_csv(
-        "E:\MaizeStuffTempDelete\MergedTrainingTrait_Meta_Soil_Weather_YieldLastNew.csv",
+        "E:\MaizeStuffTempDelete\MergedTrainingTrait_Meta_Soil_Weather_YieldLastNew_AreaPlot.csv",
         index=False,
     )
 
@@ -594,190 +595,8 @@ def numaricEncoder(df):  # encode the categorical data, best way to do it
 
 
 def main():
-    # read csv
-    df = pd.read_csv(
-        os.path.join(
-            "Data",
-            "Training_Data",
-            "1_Training_Trait_Data_2014_2021_NoMissingYield.csv",
-        )
-    )
-    # fill na
-    df = checkAndFillNaDataFrame(df)
-    # numeralize data
-    df = numaricEncoder(df)
-    # save
-    df.to_csv(
-        os.path.join(
-            "Data",
-            "Training_Data",
-            "1_Training_Trait_Data_2014_2021_NoMissingYield_Numeralized.csv",
-        ),
-        index=False,
-    )
 
-    # drop testing meta data columns
-
-    # dropColumnsForTestingMetaData()
-    # dropColumnsForTestingSoilData()
-    # dropColumnsForWeatherData()
-
-    # merge meta and template
-    # createMergedTestSubTemp_SoilData()
-    # createMergeTestSubTemp_WeatherData()
-
-    # createMonthlyWeatherData()
-
-    # drop columns for training trait data
-    # dropColumnsForTrainingTraitData()
-
-    # checkAndFillNaData(
-    #     os.path.join(
-    #         "Data",
-    #         "Training_Data",
-    #         "1_Training_Trait_Data_2014_2021_NoMissingYield_Selected_Columns.csv",
-    #     ),
-    #     os.path.join(
-    #         "Data",
-    #         "Training_Data",
-    #         "1_Training_Trait_Data_2014_2021_NoMissingYield_Selected_Columns_Filled.csv",
-    #     ),
-    # )
-
-    # dropColumnsForTrainingMetaData()
-
-    """checkAndFillNaData(
-        os.path.join(
-            "Data",
-            "Training_Data",
-            "2_Training_Meta_Data_2014_2021_Selected_Columns.csv",
-        ),
-        os.path.join(
-            "Data",
-            "Training_Data",
-            "2_Training_Meta_Data_2014_2021_Selected_Columns_Filled.csv",
-        ),
-    )"""
-
-    # dropColumnsForTrainingSoilData()
-
-    # checkAndFillNaData(
-    #     os.path.join(
-    #         "Data",
-    #         "Training_Data",
-    #         "3_Training_Soil_Data_2015_2021_Selected_Columns.csv",
-    #     ),
-    #     os.path.join(
-    #         "Data",
-    #         "Training_Data",
-    #         "3_Training_Soil_Data_2015_2021_Selected_Columns_Filled.csv",
-    #     ),
-    # )
-
-    # dropColumnsForTrainingWeatherData()
-
-    # checkAndFillNaData(
-    #     os.path.join(
-    #         "Data",
-    #         "Training_Data",
-    #         "4_Training_Weather_Data_2014_2021_Selected_Columns.csv",
-    #     ),
-    #     os.path.join(
-    #         "Data",
-    #         "Training_Data",
-    #         "4_Training_Weather_Data_2014_2021_Selected_Columns_Filled.csv",
-    #     ),
-    # )
-
-    # mergeTwoCsvFiles(
-    #     os.path.join(
-    #         "Data",
-    #         "Training_Data",
-    #         "1_Training_Trait_Data_2014_2021_NoMissingYield_Selected_Columns_Filled.csv",
-    #     ),
-    #     os.path.join(
-    #         "Data",
-    #         "Training_Data",
-    #         "2_Training_Meta_Data_2014_2021_Selected_Columns_Filled.csv",
-    #     ),
-    #     os.path.join(
-    #         "Data",
-    #         "Training_Data",
-    #         "MergedTrainingTrait_Meta.csv",
-    #     ),
-    #     "Env",
-    # )
-
-    # mergeTwoCsvFiles(
-    #     os.path.join(
-    #         "Data",
-    #         "Training_Data",
-    #         "MergedTrainingTrait_Meta.csv",
-    #     ),
-    #     os.path.join(
-    #         "Data",
-    #         "Training_Data",
-    #         "3_Training_Soil_Data_2015_2021_Selected_Columns_Filled.csv",
-    #     ),
-    #     os.path.join(
-    #         "Data",
-    #         "Training_Data",
-    #         "MergedTrainingTrait_Meta_Soil.csv",
-    #     ),
-    #     "Env",
-    # )
-
-    # mergeTwoCsvFiles(
-    #     os.path.join(
-    #         "Data",
-    #         "Training_Data",
-    #         "MergedTrainingTrait_Meta_Soil.csv",
-    #     ),
-    #     os.path.join(
-    #         "Data",
-    #         "Training_Data",
-    #         "4_Training_Weather_Data_2014_2021_Selected_Columns_Filled.csv",
-    #     ),
-    #     # save directory
-    #     # E:\MaizeStuffTempDelete
-    #     "E:\MaizeStuffTempDelete\MergedTrainingTrait_Meta_Soil_Weather.csv",
-    #     "Env",
-    # )
-
-    # # make yield_mg_ha the last column
-    # df = pd.read_csv(
-    #     "E:\MaizeStuffTempDelete\MergedTrainingTrait_Meta_Soil_Weather_.csv",
-    #     encoding="latin-1",
-    # )
-    # cols = list(df.columns.values)
-    # cols.pop(cols.index("Yield_Mg_ha"))
-    # df = df[cols + ["Yield_Mg_ha"]]
-
-    # df = pd.read_csv(
-    #     "E:\MaizeStuffTempDelete\MergedTrainingTrait_Meta_Soil_Weather_YieldLast.csv",
-    #     encoding="latin-1",
-    # )
-
-    # # numeralize data
-    # df = numaricEncoder(df)
-
-    # # Check Head of Merged Data
-    # df.head().to_csv("E:\MaizeStuffTempDelete\HeadlastNumeralized.csv")
-
-    # # if head is good, save to csv
-    # df.to_csv(
-    #     "E:\MaizeStuffTempDelete\MergedTrainingTrait_Meta_Soil_Weather_YieldLast.csv",
-    #     index=False,
-    # )
-
-    # # head for training
-    # # Env,Hybrid,Year_x,Yield_Mg_ha,Year_y,Treatment,Previous_Crop,Type_of_planter (fluted cone; belt cone; air planter),System_Determining_Moisture,Pounds_Needed_Soil_Moisture,Year,1:1 Soil pH,1:1 S Salts mmho/cm,Organic Matter LOI %,Potassium ppm K,Nitrate-N ppm N,Mehlich P-III ppm P,%Ca Sat,%Mg Sat,% Sand,% Silt,% Clay,Date,ALLSKY_SFC_PAR_TOT,RH2M,T2M_MAX,GWETPROF,GWETTOP,T2M_MIN,GWETROOT
-
-    # # numeralize columns
-    # df = pd.read_csv("E:\MaizeStuffTempDelete\MergedTrainingTrait_Meta_Soil_Weather.csv", encoding="latin-1")
-    # df = numeralizeColumns(df)
-
-    # mergeAllTrainingData()
+    mergeAllTrainingData()
 
     print("Done")
 
@@ -859,3 +678,187 @@ if __name__ == "__main__":
 """
 # # interpolate missing values
 # df1.interpolate(method="linear", inplace=True)
+# read csv
+# df = pd.read_csv(
+#     os.path.join(
+#         "Data",
+#         "Training_Data",
+#         "1_Training_Trait_Data_2014_2021_NoMissingYield.csv",
+#     )
+# )
+# # fill na
+# df = checkAndFillNaDataFrame(df)
+# # numeralize data
+# df = numaricEncoder(df)
+# # save
+# df.to_csv(
+#     os.path.join(
+#         "Data",
+#         "Training_Data",
+#         "1_Training_Trait_Data_2014_2021_NoMissingYield_Numeralized.csv",
+#     ),
+#     index=False,
+# )
+
+# drop testing meta data columns
+
+# dropColumnsForTestingMetaData()
+# dropColumnsForTestingSoilData()
+# dropColumnsForWeatherData()
+
+# merge meta and template
+# createMergedTestSubTemp_SoilData()
+# createMergeTestSubTemp_WeatherData()
+
+# createMonthlyWeatherData()
+
+# drop columns for training trait data
+# dropColumnsForTrainingTraitData()
+
+# checkAndFillNaData(
+#     os.path.join(
+#         "Data",
+#         "Training_Data",
+#         "1_Training_Trait_Data_2014_2021_NoMissingYield_Selected_Columns.csv",
+#     ),
+#     os.path.join(
+#         "Data",
+#         "Training_Data",
+#         "1_Training_Trait_Data_2014_2021_NoMissingYield_Selected_Columns_Filled.csv",
+#     ),
+# )
+
+# dropColumnsForTrainingMetaData()
+
+"""checkAndFillNaData(
+        os.path.join(
+            "Data",
+            "Training_Data",
+            "2_Training_Meta_Data_2014_2021_Selected_Columns.csv",
+        ),
+        os.path.join(
+            "Data",
+            "Training_Data",
+            "2_Training_Meta_Data_2014_2021_Selected_Columns_Filled.csv",
+        ),
+    )"""
+
+# dropColumnsForTrainingSoilData()
+
+# checkAndFillNaData(
+#     os.path.join(
+#         "Data",
+#         "Training_Data",
+#         "3_Training_Soil_Data_2015_2021_Selected_Columns.csv",
+#     ),
+#     os.path.join(
+#         "Data",
+#         "Training_Data",
+#         "3_Training_Soil_Data_2015_2021_Selected_Columns_Filled.csv",
+#     ),
+# )
+
+# dropColumnsForTrainingWeatherData()
+
+# checkAndFillNaData(
+#     os.path.join(
+#         "Data",
+#         "Training_Data",
+#         "4_Training_Weather_Data_2014_2021_Selected_Columns.csv",
+#     ),
+#     os.path.join(
+#         "Data",
+#         "Training_Data",
+#         "4_Training_Weather_Data_2014_2021_Selected_Columns_Filled.csv",
+#     ),
+# )
+
+# mergeTwoCsvFiles(
+#     os.path.join(
+#         "Data",
+#         "Training_Data",
+#         "1_Training_Trait_Data_2014_2021_NoMissingYield_Selected_Columns_Filled.csv",
+#     ),
+#     os.path.join(
+#         "Data",
+#         "Training_Data",
+#         "2_Training_Meta_Data_2014_2021_Selected_Columns_Filled.csv",
+#     ),
+#     os.path.join(
+#         "Data",
+#         "Training_Data",
+#         "MergedTrainingTrait_Meta.csv",
+#     ),
+#     "Env",
+# )
+
+# mergeTwoCsvFiles(
+#     os.path.join(
+#         "Data",
+#         "Training_Data",
+#         "MergedTrainingTrait_Meta.csv",
+#     ),
+#     os.path.join(
+#         "Data",
+#         "Training_Data",
+#         "3_Training_Soil_Data_2015_2021_Selected_Columns_Filled.csv",
+#     ),
+#     os.path.join(
+#         "Data",
+#         "Training_Data",
+#         "MergedTrainingTrait_Meta_Soil.csv",
+#     ),
+#     "Env",
+# )
+
+# mergeTwoCsvFiles(
+#     os.path.join(
+#         "Data",
+#         "Training_Data",
+#         "MergedTrainingTrait_Meta_Soil.csv",
+#     ),
+#     os.path.join(
+#         "Data",
+#         "Training_Data",
+#         "4_Training_Weather_Data_2014_2021_Selected_Columns_Filled.csv",
+#     ),
+#     # save directory
+#     # E:\MaizeStuffTempDelete
+#     "E:\MaizeStuffTempDelete\MergedTrainingTrait_Meta_Soil_Weather.csv",
+#     "Env",
+# )
+
+# # make yield_mg_ha the last column
+# df = pd.read_csv(
+#     "E:\MaizeStuffTempDelete\MergedTrainingTrait_Meta_Soil_Weather_.csv",
+#     encoding="latin-1",
+# )
+# cols = list(df.columns.values)
+# cols.pop(cols.index("Yield_Mg_ha"))
+# df = df[cols + ["Yield_Mg_ha"]]
+
+# df = pd.read_csv(
+#     "E:\MaizeStuffTempDelete\MergedTrainingTrait_Meta_Soil_Weather_YieldLast.csv",
+#     encoding="latin-1",
+# )
+
+# # numeralize data
+# df = numaricEncoder(df)
+
+# # Check Head of Merged Data
+# df.head().to_csv("E:\MaizeStuffTempDelete\HeadlastNumeralized.csv")
+
+# # if head is good, save to csv
+# df.to_csv(
+#     "E:\MaizeStuffTempDelete\MergedTrainingTrait_Meta_Soil_Weather_YieldLast.csv",
+#     index=False,
+# )
+
+# # head for training
+# # Env,Hybrid,Year_x,Yield_Mg_ha,Year_y,Treatment,Previous_Crop,Type_of_planter (fluted cone; belt cone; air planter),System_Determining_Moisture,Pounds_Needed_Soil_Moisture,Year,1:1 Soil pH,1:1 S Salts mmho/cm,Organic Matter LOI %,Potassium ppm K,Nitrate-N ppm N,Mehlich P-III ppm P,%Ca Sat,%Mg Sat,% Sand,% Silt,% Clay,Date,ALLSKY_SFC_PAR_TOT,RH2M,T2M_MAX,GWETPROF,GWETTOP,T2M_MIN,GWETROOT
+
+# # numeralize columns
+# df = pd.read_csv("E:\MaizeStuffTempDelete\MergedTrainingTrait_Meta_Soil_Weather.csv", encoding="latin-1")
+# df = numeralizeColumns(df)
+
+# mergeAllTrainingData()
