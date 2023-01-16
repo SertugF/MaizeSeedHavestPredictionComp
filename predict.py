@@ -18,11 +18,7 @@ from sklearn.model_selection import train_test_split
 def main():
     # load dataset
     data = pd.read_csv(
-        os.path.join(
-            "Data",
-            "Training_Data",
-            "1_Training_Trait_Data_2014_2021_NoMissingYield_Numeralized.csv",
-        )
+        "E:\MaizeStuffTempDelete\MergedTrainingTrait_Meta_Soil_Weather_YieldLastNew_AreaPlot.csv",
     )
 
     X = data.drop(["Yield_Mg_ha"], axis=1).values
@@ -34,7 +30,7 @@ def main():
 
     # create model
     model = Sequential()
-    model.add(Dense(128, input_dim=25, activation="relu"))  # input dimension is 25. !!!
+    model.add(Dense(128, input_dim=29, activation="relu"))  # input dimension is 29. !!!
 
     model.add(Dense(64, activation="relu"))
 
@@ -92,7 +88,7 @@ def main():
     print("R2 score for validation set: ", r2_score(y_Val, Pred_y_vall))
 
     # save model
-    model.save("model.h5")
+    model.save("model2.h5")
 
 
 if __name__ == "__main__":

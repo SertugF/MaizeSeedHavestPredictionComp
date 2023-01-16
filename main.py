@@ -126,7 +126,6 @@ def checkPearsonCorrelation(givenCsvFile, newCsvFile):
     # print(df.corr(method="pearson"))
 
     # save corelation results to csv file
-    df.corr(method="pearson").to_csv(newCsvFile, index=False)
 
 
 # def numeralizeData(givenCsvFile, newCsvFile):  # depreceted
@@ -561,6 +560,7 @@ def mergeAllTrainingData():
         )
     )
     # merge all data
+
     print(df.head())
     print("-----------------------------------------------")
     print(df1.head())
@@ -575,9 +575,115 @@ def mergeAllTrainingData():
     # check head of data
     print(df6.head())
 
-    # write to csv neeeds to be around 4.9gb ()
+    # write to csv neeeds to be around 5.4gb ()
     df6.to_csv(
         "E:\MaizeStuffTempDelete\MergedTrainingTrait_Meta_Soil_Weather_YieldLastNew_AreaPlot.csv",
+        index=False,
+    )
+
+
+def mergeAllTestData():
+    # read training trait data filled
+    df = pd.read_csv(
+        os.path.join(
+            "Data",
+            "Testing_Data",
+            "1_Submission_Template_2022.csv",
+        )
+    )
+    # read training meta data filled
+    df1 = pd.read_csv(
+        os.path.join(
+            "Data",
+            "Testing_Data",
+            "2_Testing_Meta_Data_2014_2021_Selected_Columns_Filled_NoIrrigate.csv",
+        )
+    )
+
+    # read training soil data filled
+
+    df2 = pd.read_csv(
+        os.path.join(
+            "Data",
+            "Testing_Data",
+            "3_Testing_Soil_Data_Selected_ColumnsV1_Filled.csv",
+        )
+    )
+
+    # read training weather data filled
+    df3 = pd.read_csv(
+        os.path.join(
+            "Data",
+            "Testing_Data",
+            "4_Testing_Weather_Data_Selected_ColumnsV1_Filled.csv",
+        )
+    )
+    # merge all data
+
+    print(df.head())
+    print("-----------------------------------------------")
+    print(df1.head())
+
+    df4 = pd.merge(df, df1, on=["Env"], how="outer")
+    df5 = pd.merge(df4, df2, on=["Env"], how="outer")
+    df6 = pd.merge(df5, df3, on=["Env"], how="outer")
+
+    print(df6.head())
+    print(df6.shape)
+    print(df6.isnull().sum())
+
+    df6 = checkAndFillNaDataFrame(df6)
+
+    print(df6.head())
+    print(df6.shape)
+    print(df6.isnull().sum())
+
+    # numeralize data
+    df6 = numaricEncoder(df6)
+
+    # check head of data
+    print(df6.head())
+
+    # write to csv neeeds to be around 5.4gb ()
+    # df6.to_csv(
+    #     os.path.join(
+    #         "Data",
+    #         "Testing_Data",
+    #         "MergedTestingTrait_Meta_Soil_Weather.csv",
+    #     ),
+    #     index=False,
+    # )
+
+    df6.to_csv(
+        os.path.join(
+            "Data",
+            "Testing_Data",
+            "MergedTestingTrait_Meta_Soil_Weather_WithOuter.csv",
+        ),
+        index=False,
+    )
+
+
+def removeIrrigateFromMetedata():
+    # read training meta data filled
+    df1 = pd.read_csv(
+        os.path.join(
+            "Data",
+            "Testing_Data",
+            "2_Testing_Meta_Data_Selected_ColumnsV1_Filled.csv",
+        )
+    )
+
+    # drop Irrigate column
+    df1.drop(columns=["Irrigated"], axis=1, inplace=True)
+
+    # write the csv file
+    df1.to_csv(
+        os.path.join(
+            "Data",
+            "Testing_Data",
+            "2_Testing_Meta_Data_2014_2021_Selected_Columns_Filled_NoIrrigate.csv",
+        ),
         index=False,
     )
 
@@ -594,9 +700,95 @@ def numaricEncoder(df):  # encode the categorical data, best way to do it
     return df
 
 
+def dropExtraColumnsforTestDataset():
+    # read MergedTestingTrait_Meta_Soil_Weather.csv
+    df = pd.read_csv(
+        os.path.join(
+            "Data",
+            "Testing_Data",
+            "MergedTestingTrait_Meta_Soil_Weather_WithOuter.csv",
+        )
+    )
+
+    # drop columns
+    data = df.drop(
+        columns=["Year_x", "Year_y", "GWETPROF", "GWETTOP", "T2M_MAX", "Yield_Mg_ha"],
+    )
+
+    # write the csv file
+    data.to_csv(
+        os.path.join(
+            "Data",
+            "Testing_Data",
+            "MergedTestingTrait_Meta_Soil_Weather_NoExtraColumns_WithOuter.csv",
+        ),
+        index=False,
+    )
+
+
+def rowCheker(df):  # derpericated
+    # checks if train and test columns are same and true
+    # if they are true return Hybrid name
+    # else return false
+    trainColumns = list(df.columns)
+    testColumns = list(df.columns)
+    if trainColumns == testColumns and trainColumns == "True":
+        return df["Hybrid"]
+
+
+def printToDF(str):
+    # given a string creates numpy array and writes to csv
+    # used to print the results to csv
+    np.savetxt(
+        os.path.join("Data", "Testing_Data", "Results.csv"),
+        np.array(str),
+        delimiter=",",
+        fmt="%s",
+    )
+
+    # check if data frame has nan values
+    # print(df.isnull().sum())
+    # read latin
+
+    # df = pd.read_csv(
+    #     os.path.join("Data", "Testing_Data", "MergedTestingTrait_Meta_Soil_Weather.csv"), encoding="latin-1"
+    # )
+    # df2 drop columns
+    # data = df2.drop(
+    #     columns=["Year_x", "Year_y", "GWETPROF", "GWETTOP", "T2M_MAX", "Yield_Mg_ha"],
+    # )
+
+    # save to csv with data frame
+    # df = pd.DataFrame(str)
+    # df.to_csv(
+    #     os.path.join("Data", "Testing_Data", "Results.csv"),
+    #     index=False,
+    # )
+
+    # df size
+
+
 def main():
 
-    mergeAllTrainingData()
+    # mergeAllTrainingData()
+    # removeIrrigateFromMetedata()
+    # mergeAllTestData()
+    # dropExtraColumnsforTestDataset()
+
+    # read MergedTestingTrait_Meta_Soil_Weather_NoExtraColumns.csv
+    # df = pd.read_csv(
+    #     os.path.join(
+    #         "Data",
+    #         "Testing_Data",
+    #         "MergedTestingTrait_Meta_Soil_Weather_NoExtraColumns.csv",
+    #     )
+    # )
+
+    # # check feature size
+    # print(df.shape)
+
+    mergeAllTestData()
+    dropExtraColumnsforTestDataset()
 
     print("Done")
 
